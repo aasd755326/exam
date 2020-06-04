@@ -1,0 +1,58 @@
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>exam</title>
+  </head>
+
+  <body>
+    <form id="form">
+        input1<input class="input1" type="text"><br>
+        input2<input class="input2" type="text"><br>
+        input3<input class="input3" type="text"><br>
+        <button class="btn" type="submit">送出</button>
+      </form><br><br>
+      
+    <p id="result"></p> <!-- 顯示回傳資料 -->
+    
+      
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Event triggered!")
+            $('#form button[class=btn]').click(function() {
+                event.preventDefault()
+                $.ajax({
+                    type: "POST",
+                    url: "./exam.php", 
+                    dataType: "json",
+                    data: { 
+                        input1: $(".input1").val(),
+                        input2: $(".input2").val(),
+                        input3: $(".input3").val(),
+                    },
+                    success: function(data) {
+                        if (data) { 
+                            $("#form")[0].reset(); //重設 ID 為 form 的 form (表單)
+                            console.log(data); //在console中顯示data
+                            $("#result").html('<font color="#007500">input1:<font color="#0000ff">' + data.input1 + '</font><br>input2:<font color="#0000ff">' + data.input2 + '</font><br>input3:<font color="#0000ff">' + data.input3 + '</font></font>'); 輸出一行字
+                            
+                            // var a = parseInt('data.input1'); 把input1轉成數字
+                            // var a = 'abc' + 'xyz'; 會是'abcxyz'
+                            
+                        } else { //否則讀取後端回傳 json 資料 errorMsg 顯示錯誤訊息
+                            $("#form")[0].reset(); //重設 ID 為 form 的 form (表單)
+                            console.log(data.errorMsg)
+                        }
+                    },
+                    error: function(jqXHR) {
+                        $("#form")[0].reset(); //重設 ID 為 form 的 form (表單)
+                        console.log(jqXHR.status)
+                    }
+                });
+            });
+        });
+      </script>
+  </body>
+
+</html>
